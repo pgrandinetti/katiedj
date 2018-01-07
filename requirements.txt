@@ -1,0 +1,17 @@
+asgiref==1.1.2
+attrs==17.4.0
+autobahn==17.10.1
+Automat==0.6.0
+channels==1.1.8
+constantly==15.1.0
+daphne==1.4.2
+Django==2.0.1
+django-extensions==1.9.8
+hyperlink==17.3.1
+incremental==17.5.0
+pytz==2017.3
+six==1.11.0
+Twisted==17.9.0
+txaio==2.8.2
+typing==3.6.2
+zope.interface==4.4.3
