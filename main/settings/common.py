@@ -95,3 +95,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# API KEYS for publishers
+API_KEYS = eval(os.environ['API_KEYS'])
