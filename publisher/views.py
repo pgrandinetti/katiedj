@@ -25,7 +25,7 @@ class PublisherView(View):
             key = request.META['HTTP_API_KEY']
             if not key in settings.API_KEYS:
                 return JsonResponse(
-                    {'error': 'API_KEY not valid'}, status=400)
+                    {'error': 'API-KEY not valid'}, status=400)
         except:
             return JsonResponse(
                 {'error': 'API-KEY missing in headers'}, status=400)
