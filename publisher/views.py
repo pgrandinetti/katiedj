@@ -48,5 +48,5 @@ class PublisherView(View):
         if not isinstance(body['data'], dict):
             return JsonResponse(
                 {'error': 'Can only broadcast json data'}, status=400)
-        Group(group).send(body['data'])
+        Group(group).send({'text': json.dumps(body['data'])})
         return JsonResponse({}, status=200)
