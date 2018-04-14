@@ -1,10 +1,20 @@
-from main import consumers
-from channels import include as ch_include
+from . import consumers
 
-macro_routing = [
-    consumers.SampleNetwork.as_route(path=r"^/sample/"),
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+
+from django.conf.urls import url
+
+
+websocket_urlpatterns = [
+    url(r'^macro/sample/$', consumers.SampleNetwork),
 ]
 
-channel_routing = [
-    ch_include(macro_routing, path=r"^/macro"),
-]
+application = ProtocolTypeRouter({
+    # (http->django views is added by default)
+    'websocket': AuthMiddlewareStack(
+        URLRouter(
+            websocket_urlpatterns
+        )
+    )
+})

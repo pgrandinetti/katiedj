@@ -1,4 +1,4 @@
-from channels import Group
+from channels.layers import get_channel_layer
 from main.consumers import SampleNetwork
 
 from channels.test import ChannelTestCase, WSClient
@@ -7,6 +7,7 @@ from channels.test import ChannelTestCase, WSClient
 class TestGroupSampleNet(ChannelTestCase):
 
     path = '/macro/sample/'
+    channel_layer = get_channel_layer()
 
     def test_add(self):
         client = WSClient()

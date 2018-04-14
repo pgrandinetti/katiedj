@@ -1,6 +1,7 @@
 import sys
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
@@ -38,12 +39,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'main.urls'
 
+## Channels2
+ASGI_APPLICATION = 'main.routing.application'
+
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'asgiref.inmemory.ChannelLayer',
-        'ROUTING': 'main.routing.channel_routing',
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
+##
 
 TEMPLATES = [
     {

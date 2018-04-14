@@ -1,10 +1,11 @@
-asgiref==1.1.2
+asgiref==2.3.0
+async-timeout==2.0.1
 attrs==17.4.0
 autobahn==17.10.1
 Automat==0.6.0
-channels==1.1.8
+channels==2.1.0
 constantly==15.1.0
-daphne==1.4.2
+daphne==2.1.0
 Django==2.0.1
 django-extensions==1.9.8
 hyperlink==17.3.1

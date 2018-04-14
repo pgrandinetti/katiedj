@@ -3,7 +3,12 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from channels import Group
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
+from main.consumers import TrafficBroadcast
+
 import json
 
 
@@ -48,5 +53,10 @@ class PublisherView(View):
         if not isinstance(body['data'], dict):
             return JsonResponse(
                 {'error': 'Can only broadcast json data'}, status=400)
-        Group(group).send({'text': json.dumps(body['data'])})
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+                    group,
+                    {'text': body['data'],
+                     'type': TrafficBroadcast.msg_type}
+        )
         return JsonResponse({}, status=200)

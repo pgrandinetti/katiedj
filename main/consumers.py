@@ -1,12 +1,18 @@
-from channels.generic.websockets import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
+
+import json
 
 
-class TrafficBroadcast(WebsocketConsumer):
+class TrafficBroadcast(AsyncWebsocketConsumer):
 
-    # Set to True to automatically port users from HTTP cookies
-    # (you don't need channel_session_user, this implies it)
-    http_user = True
-    strict_ordering = False
+    msg_type = 'traffic_data'
+
+    async def connect(self):
+        await self.channel_layer.group_add(
+            self.network_name,
+            self.channel_name
+        )
+        await self.accept()
 
     def connection_groups(self, **kwargs):
         """
@@ -15,9 +21,16 @@ class TrafficBroadcast(WebsocketConsumer):
         """
         return [self.network_name]
 
-    def receive(self, text=None, bytes=None, **kwargs):
+    async def receive(self, text=None, bytes=None, **kwargs):
         # Not talking!
         pass
+
+    async def traffic_data(self, event):
+        message = event['text']
+
+        # Send message to WebSocket
+        await self.send(
+                text_data=json.dumps(message))
 
 
 class SampleNetwork(TrafficBroadcast):
