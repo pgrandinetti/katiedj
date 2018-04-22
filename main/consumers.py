@@ -9,10 +9,14 @@ class TrafficBroadcast(AsyncWebsocketConsumer):
 
     async def connect(self):
         await self.channel_layer.group_add(
-            self.network_name,
-            self.channel_name
+            self.network_name, self.channel_name
         )
         await self.accept()
+
+    async def disconnect(self, code):
+        await self.channel_layer.group_discard(
+            self.network_name, self.channel_name
+        )
 
     def connection_groups(self, **kwargs):
         """

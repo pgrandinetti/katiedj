@@ -1,47 +1,78 @@
+import pytest
+
+from channels.testing import WebsocketCommunicator
 from channels.layers import get_channel_layer
+
 from main.consumers import SampleNetwork
 
-from channels.test import ChannelTestCase, WSClient
+path = '/macro/sample/'
 
 
-class TestGroupSampleNet(ChannelTestCase):
+# pytest main/tests/test_groups_channels2.py --ds=main.settings.dev
 
-    path = '/macro/sample/'
-    channel_layer = get_channel_layer()
+@pytest.mark.asyncio
+async def test_add():
+    communicator = WebsocketCommunicator(SampleNetwork, path)
+    connected, protocol = await communicator.connect()
+    assert connected
+    assert await communicator.receive_nothing()
+    lay = get_channel_layer()
+    await lay.group_send(
+            SampleNetwork.network_name,
+            {'text': 'ok',
+             'type': SampleNetwork.msg_type})
+    response = await communicator.receive_json_from()
+    assert (response == 'ok')
+    assert await communicator.receive_nothing()
+    await communicator.disconnect()
 
-    def test_add(self):
-        client = WSClient()
-        client.send_and_consume('websocket.connect', path=self.path)
-        self.assertIsNone(client.receive())
-        Group(SampleNetwork.network_name).send(
-            {'text': 'ok'}, immediately=True)
-        self.assertEqual(client.receive(json=False), 'ok')
 
-    def test_add_remove(self):
-        client = WSClient()
-        client.send_and_consume('websocket.connect', path=self.path)
-        self.assertIsNone(client.receive())
-        Group(SampleNetwork.network_name).send(
-            {'text': 'ok'}, immediately=True)
-        self.assertEqual(client.receive(json=False), 'ok')
-        client.send_and_consume('websocket.disconnect', path=self.path)
-        Group(SampleNetwork.network_name).send(
-            {'text': 'ok'}, immediately=True)
-        self.assertIsNone(client.receive())
+@pytest.mark.asyncio
+async def test_add_remove():
+    communicator = WebsocketCommunicator(SampleNetwork, path)
+    connected, protocol = await communicator.connect()
+    assert connected
+    assert await communicator.receive_nothing()
+    lay = get_channel_layer()
+    await lay.group_send(
+            SampleNetwork.network_name,
+            {'text': 'ok',
+             'type': SampleNetwork.msg_type})
+    response = await communicator.receive_json_from()
+    assert (response == 'ok')
+    await lay.group_send(
+            SampleNetwork.network_name,
+            {'text': 'ok',
+             'type': SampleNetwork.msg_type})
+    await communicator.disconnect()
+    assert await communicator.receive_nothing()
 
-    def test_multi_clients(self):
-        client1 = WSClient()
-        client2 = WSClient()
-        client1.send_and_consume('websocket.connect', path=self.path)
-        self.assertIsNone(client1.receive())
-        client2.send_and_consume('websocket.connect', path=self.path)
-        self.assertIsNone(client2.receive())
-        Group(SampleNetwork.network_name).send(
-            {'text': 'ok'}, immediately=True)
-        self.assertEqual(client1.receive(json=False), 'ok')
-        self.assertEqual(client2.receive(json=False), 'ok')
-        client1.send_and_consume('websocket.disconnect', path=self.path)
-        Group(SampleNetwork.network_name).send(
-            {'text': 'ok'}, immediately=True)
-        self.assertIsNone(client1.receive())
-        self.assertEqual(client2.receive(json=False), 'ok')
+
+@pytest.mark.asyncio
+async def test_multi_clients():
+    communicator1 = WebsocketCommunicator(SampleNetwork, path)
+    connected1, _ = await communicator1.connect()
+    assert connected1
+    communicator2 = WebsocketCommunicator(SampleNetwork, path)
+    connected2, _ = await communicator2.connect()
+    assert(connected2)
+    assert await communicator1.receive_nothing()
+    assert await communicator2.receive_nothing()
+    lay = get_channel_layer()
+    await lay.group_send(
+            SampleNetwork.network_name,
+            {'text': 'ok',
+             'type': SampleNetwork.msg_type})
+    resp1 = await communicator1.receive_json_from()
+    resp2 = await communicator2.receive_json_from()
+    assert (resp1 == 'ok')
+    assert (resp2 == 'ok')
+    await communicator1.disconnect()
+    await lay.group_send(
+            SampleNetwork.network_name,
+            {'text': 'ok',
+             'type': SampleNetwork.msg_type})
+    assert await communicator1.receive_nothing()
+    resp2 = await communicator2.receive_json_from()
+    await communicator2.disconnect()
+    assert (resp2 == 'ok')
