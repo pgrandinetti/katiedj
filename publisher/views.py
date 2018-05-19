@@ -16,15 +16,16 @@ import json
 class PublisherView(View):
 
     def post(self, request):
-        """ Called by a publisher, to broadcast its data.
+        """
+            Called by a publisher, to broadcast its data.
 
             Request parameters (in json format):
 
             Headers:
-                `API-KEY` - a valid key to access the endpoint (HEADERS)
+                API-KEY - a valid key to access the endpoint (HEADERS)
             POST data:
-                `network` - a valid network channel name
-                `data` - the actual data to be broadcasted, in valid json
+                network - a valid network channel name
+                data - the actual data to be broadcasted, in valid json
         """
         try:
             key = request.META['HTTP_API_KEY']

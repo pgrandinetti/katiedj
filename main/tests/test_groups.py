@@ -8,7 +8,7 @@ from main.consumers import SampleNetwork
 path = '/macro/sample/'
 
 
-# pytest main/tests/test_groups_channels2.py --ds=main.settings.dev
+# pytest main/tests/test_groups.py --ds=main.settings.dev
 
 @pytest.mark.asyncio
 async def test_add():

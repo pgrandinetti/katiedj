@@ -18,7 +18,7 @@ VALID_KEY = [k for k in settings.API_KEYS.keys()
 ENDPOINT = reverse('publisher:main')
 
 
-# pytest publisher/tests/test_publisher_channels2.py --ds=main.settings.dev
+# pytest publisher/tests/test_publisher.py --ds=main.settings.dev
 
 def test_wrong_key():
     """ The API-KEY is not valid"""
@@ -84,7 +84,7 @@ async def test_ok_1():
 
 @pytest.mark.asyncio
 async def test_missing_data():
-    """ Key `data' is missing """
+    """ Key 'data' is missing """
     client = Client(enforce_csrf_checks=True)
     communicator = WebsocketCommunicator(SampleNetwork, path)
     connected, _ = await communicator.connect()
@@ -107,7 +107,7 @@ async def test_missing_data():
 
 @pytest.mark.asyncio
 async def test_missing_channel():
-    """ Key `network` is missing """
+    """ Key 'network' is missing """
     client = Client(enforce_csrf_checks=True)
     communicator = WebsocketCommunicator(SampleNetwork, path)
     connected, _ = await communicator.connect()

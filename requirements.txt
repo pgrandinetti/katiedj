@@ -1,4 +1,5 @@
 asgiref==2.3.0
+async-generator==1.9
 async-timeout==2.0.1
 attrs==17.4.0
 autobahn==17.10.1
@@ -10,6 +11,13 @@ Django==2.0.1
 django-extensions==1.9.8
 hyperlink==17.3.1
 incremental==17.5.0
+more-itertools==4.1.0
+pkg-resources==0.0.0
+pluggy==0.6.0
+py==1.5.3
+pytest==3.5.1
+pytest-asyncio==0.8.0
+pytest-django==3.2.1
 pytz==2017.3
 six==1.11.0
 Twisted==17.9.0
