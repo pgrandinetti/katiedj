@@ -50,3 +50,47 @@ Katie DJ development is based on Python and relies on the following libraries:
   - Channels (with Daphne, Asigref)
   - Websockets
   - pytest
+
+
+## Developer's guide
+
+If you want to fork (or clone) KatieDJ's web server, and reproduce it, here are the steps that you should follow:
+
+  1. Clone the repository. For example (in some Linux distributions): `git clone https://github.com/pgrandinetti/katiedj.git ~/katiedj`
+  2. Create and activate a new python virtual environment. The current development was done under Python 3.5.2, but more recent versions should also work.
+  3. Move into the project folder. For example: `cd ~/katiedj`.
+  4. Install all required packages into the new virtualenv: `pip install -r requirements.txt`.
+  5. Create the file `main/settings/secret.py`. See below for details.
+  6. You are now ready to go. For example, in your local environment you can do `python manage.py runserver --settings=main.settings.dev` and the server will start.
+
+
+The `main/settings/secret.py` is where we store secret information such as passwords and API keys, and it's not versioned with git. You will have to create it and add into it the information required for a realistic deployment. For example, in katiedj.com server the `secret.py` looks like the following:
+
+```
+from os import environ
+import json
+
+environ["SECRET_KEY"] = "django-secret-key--required"
+environ["EMAIL_HOST_USER"] = "something--not required at the moment"
+environ["EMAIL_HOST_PASSWORD"] = "some-passw--not required at the moment"
+environ["EMAIL_USE_TLS"] = "True"
+environ["EMAIL_PORT"] = "some-digits--not required at the moment"
+environ["EMAIL_HOST"] = "some-host--not required at the moment"
+
+# API KEYS for publishers
+#
+# (key, value) pairs of (string, list[string])
+# When a request arrives with a valid *key*,
+# the message can be broadcasted only to channels whose name is contained in the corresponding *value*.
+# If the request doesn't contain any valid key then it's answered with a error.
+# See publisher/views.py:PublisherView
+keys = {
+    # "sample_net" the channel name defined in main/consumers.py:SampleNetwork
+    'some-long-secret-string': ['sample_net'],
+}
+environ["API_KEYS"] = json.dumps(keys)
+```
+
+### Unit tests
+
+Just run `pytest --ds=main.settings.dev` to see the tests executed.
