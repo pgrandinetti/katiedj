@@ -12,7 +12,6 @@ django-extensions==1.9.8
 hyperlink==17.3.1
 incremental==17.5.0
 more-itertools==4.1.0
-pkg-resources==0.0.0
 pluggy==0.6.0
 py==1.5.3
 pytest==3.5.1
