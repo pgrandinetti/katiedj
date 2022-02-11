@@ -19,7 +19,7 @@ pytest-asyncio==0.8.0
 pytest-django==3.2.1
 pytz==2017.3
 six==1.11.0
-Twisted==17.9.0
+Twisted==22.1.0
 txaio==2.8.2
 typing==3.6.2
 zope.interface==4.4.3
