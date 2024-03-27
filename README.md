@@ -1,7 +1,7 @@
 Katie DJ -- Data broadcast
 =============================
 
-## **Note** The websocket server at ws://katiedj.com is not active anymore. Contact me if you want a backup of the database.
+### **Note**: The websocket server at ws://katiedj.com is not active anymore. Contact me if you want a backup of the database.
 
 [http://katiedj.com](http://katiedj.com)
 
